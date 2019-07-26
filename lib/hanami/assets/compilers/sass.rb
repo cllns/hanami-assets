@@ -31,8 +31,21 @@ module Hanami
 
         # @since 0.3.0
         # @api private
+        def dependencies
+          my_engine = engine
+          my_engine.render
+          my_engine.dependencies.map { |d| d.options[:filename] }
+        end
+
+        # @since 0.3.0
+        # @api private
         def engine
-          ::SassC::Engine.new(to_be_compiled, load_paths: load_paths, cache_location: CACHE_LOCATION)
+          ::SassC::Engine.new(
+            to_be_compiled,
+            load_paths: load_paths,
+            cache_location: CACHE_LOCATION,
+            syntax: (:sass if ::File.extname(source.to_s) == ".sass")
+          )
         end
 
         # @since x.x.x
